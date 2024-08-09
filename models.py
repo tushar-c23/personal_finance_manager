@@ -12,6 +12,7 @@ class Category(Base):
 
     user = relationship("User", back_populates="categories")
     transactions = relationship("Transaction", back_populates="category")
+    saving_goals = relationship("SavingGoal", back_populates="category")
 
 
 class User(Base):
@@ -24,6 +25,7 @@ class User(Base):
 
     transactions = relationship("Transaction", back_populates="user")
     categories = relationship("Category", back_populates="user")
+    saving_goals = relationship("SavingGoal", back_populates="user")
 
 
 class TransactionType(str, enum.Enum):
@@ -44,3 +46,16 @@ class Transaction(Base):
 
     user = relationship("User", back_populates="transactions")
     category = relationship("Category", back_populates="transactions")
+
+
+class SavingGoal(Base):
+    __tablename__ = "saving_goals"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    name = Column(String)
+    target = Column(Float)
+    progress = Column(Float, default=0.0)
+    category_id = Column(Integer, ForeignKey("categories.id"))
+
+    user = relationship("User", back_populates="saving_goals")
+    category = relationship("Category", back_populates="saving_goals")
