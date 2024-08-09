@@ -5,7 +5,7 @@ from personal_finance_manager.models import User
 
 SECRET_KEY = "syfe"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 300
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

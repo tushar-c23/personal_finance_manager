@@ -15,9 +15,14 @@ class Token(BaseModel):
 
 
 class UserInDB(BaseModel):
+    id: int
     username: str
     email: EmailStr
     name: str
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
 
 
 class TransactionType(str, Enum):
@@ -33,10 +38,12 @@ class TransactionBase(BaseModel):
 
 
 class TransactionCreate(TransactionBase):
+    # Derive all from transaction base, userid will be taken separately
     pass
 
 
 class TransactionUpdate(TransactionBase):
+    # Derive all from transaction base, userid will be taken separately
     pass
 
 
