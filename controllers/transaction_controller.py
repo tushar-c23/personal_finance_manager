@@ -1,13 +1,24 @@
 from personal_finance_manager.schemas import TransactionCreate, TransactionUpdate
 from sqlalchemy.orm import Session
-from personal_finance_manager.services import transaction_service
+from personal_finance_manager.services import transaction_service, category_service, saving_goal_service
 from personal_finance_manager.schemas import UserInDB
 from fastapi import HTTPException
+from personal_finance_manager.schemas import TransactionType
 
 
 def create_transaction(transaction: TransactionCreate, current_user: UserInDB, db: Session):
     #Check category here
-    return transaction_service.create_transaction(db, transaction, current_user.id)
+    category_id = category_service.get_category_id(db, transaction.category, current_user.id).id
+    if not category_service.category_exists(db, category_id, current_user.id):
+        raise HTTPException(status_code=400, detail="Invalid category for this user")
+
+    new_transaction = transaction_service.create_transaction(db, transaction, current_user.id)
+
+    # Update saving goal progress if the transaction type is credit
+    if transaction.transaction_type == TransactionType.credit:
+        saving_goal_service.update_saving_goal_progress(db, current_user.id, category_id, transaction.amount)
+
+    return new_transaction
 
 
 def get_transaction(transaction_id: int, current_user: UserInDB, db: Session):
