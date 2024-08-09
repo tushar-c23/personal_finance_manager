@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from personal_finance_manager.schemas import CategoryCreate
+from personal_finance_manager.schemas import CategoryCreate, CategoryUpdate
 from personal_finance_manager.models import Category
 
 
@@ -25,3 +25,26 @@ def get_category(db: Session, category_id: int):
 
 def get_user_categories(db: Session, user_id: int):
     return db.query(Category).filter(Category.user_id == user_id).all()
+
+
+def update_category(db: Session, category_id: int, category: CategoryUpdate):
+    db_category = db.query(Category).filter(Category.id == category_id).first()
+    if db_category:
+        update_data = category.dict(exclude_unset=True)
+        for key, value in update_data.items():
+            setattr(db_category, key, value)
+        db.commit()
+        db.refresh(db_category)
+    return db_category
+
+
+def delete_category(db: Session, category_id: int):
+    db_category = db.query(Category).filter(Category.id == category_id).first()
+    if db_category:
+        db.delete(db_category)
+        db.commit()
+    return db_category
+
+
+def category_exists(db: Session, category_id: int, user_id: int):
+    return db.query(Category).filter(Category.id == category_id, Category.user_id == user_id).first() is not None
