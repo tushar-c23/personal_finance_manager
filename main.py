@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from personal_finance_manager.routes import auth, user, transaction, category
+from personal_finance_manager.routes import auth, user, transaction, category, saving_goal
 from personal_finance_manager.database import Base, engine
 
 app = FastAPI()
@@ -23,3 +23,4 @@ app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(transaction.router)
 app.include_router(category.router)
+app.include_router(saving_goal.router)

@@ -79,7 +79,7 @@ class Category(CategoryBase):
 class SavingGoalBase(BaseModel):
     name: str
     target: float
-    category: int
+    category: str
 
 
 class SavingGoalCreate(SavingGoalBase):
