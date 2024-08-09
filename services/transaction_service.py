@@ -24,10 +24,14 @@ def get_user_transactions(db: Session, user_id: int):
     return db.query(Transaction).filter(Transaction.user_id == user_id).all()
 
 
-def update_transaction(db: Session, transaction_id: int, transaction: TransactionUpdate):
+def update_transaction(db: Session, transaction_id: int, transaction: TransactionUpdate, user_id: int):
     transaction_in_db = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    category_id = category_service.get_category_id(db, transaction.category, user_id).id
     if transaction_in_db:
         for key, value in transaction.dict().items():
+            if key == 'category':
+                setattr(transaction_in_db, 'category_id', category_id)
+                continue
             setattr(transaction_in_db, key, value)
         db.commit()
         db.refresh(transaction_in_db)

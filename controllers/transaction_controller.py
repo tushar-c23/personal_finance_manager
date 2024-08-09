@@ -6,6 +6,7 @@ from fastapi import HTTPException
 
 
 def create_transaction(transaction: TransactionCreate, current_user: UserInDB, db: Session):
+    #Check category here
     return transaction_service.create_transaction(db, transaction, current_user.id)
 
 
@@ -28,7 +29,7 @@ def update_transaction(transaction_id: int, transaction: TransactionUpdate, curr
         raise HTTPException(status_code=404, detail="Transaction not found")
     if transaction_in_db.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized to modify this transaction")
-    return transaction_service.update_transaction(db, transaction_id, transaction)
+    return transaction_service.update_transaction(db, transaction_id, transaction, current_user.id)
 
 
 def delete_transaction(transaction_id: int, current_user: dict, db: Session):
