@@ -1,10 +1,15 @@
 from sqlalchemy.orm import Session
 from personal_finance_manager.schemas import TransactionCreate, TransactionUpdate
 from personal_finance_manager.models import Transaction
+from personal_finance_manager.services import category_service
 
 
 def create_transaction(db: Session, transaction: TransactionCreate, user_id: int):
-    db_transaction = Transaction(**transaction.dict(), user_id=user_id)
+    # Handle none category
+    category_id = category_service.get_category_id(db, transaction.category, user_id).id
+    db_transaction = Transaction(category_id=category_id, user_id=user_id, amount=transaction.amount,
+                                 date=transaction.date, description=transaction.description,
+                                 transaction_type=transaction.transaction_type)
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)

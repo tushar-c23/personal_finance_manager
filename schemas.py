@@ -32,9 +32,10 @@ class TransactionType(str, Enum):
 
 class TransactionBase(BaseModel):
     amount: float
-    category_id: str
+    category: str
     description: str
     transaction_type: TransactionType
+    date: str
 
 
 class TransactionCreate(TransactionBase):

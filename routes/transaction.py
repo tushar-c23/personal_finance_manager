@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from personal_finance_manager.schemas import Transaction, TransactionCreate, TransactionUpdate
 from personal_finance_manager.database import get_db
-from personal_finance_manager.controllers import user_controller, transaction_controller
+from personal_finance_manager.controllers import user_controller, transaction_controller, category_controller
 from typing import List
 
 
@@ -18,7 +18,14 @@ def create_transaction(
         db: Session = Depends(get_db)
 ):
     current_user = user_controller.get_current_user(token, db)
-    return transaction_controller.create_transaction(transaction, current_user, db)
+    created_transaction = transaction_controller.create_transaction(transaction, current_user, db)
+    category = category_controller.get_category_name_from_id(created_transaction.category_id, current_user, db)
+    resp_transaction = Transaction(amount=created_transaction.amount, date=created_transaction.date,
+                                   description=created_transaction.description,
+                                   transaction_type=created_transaction.transaction_type,
+                                   category=category, id = created_transaction.id,
+                                   user_id = created_transaction.user_id)
+    return resp_transaction
 
 
 @router.get("/transactions/", response_model=List[Transaction])

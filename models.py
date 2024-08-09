@@ -40,6 +40,7 @@ class Transaction(Base):
     # category = Column(String)
     description = Column(String)
     transaction_type = Column(Enum(TransactionType))
+    date = Column(String)
 
     user = relationship("User", back_populates="transactions")
     category = relationship("Category", back_populates="transactions")
