@@ -17,3 +17,11 @@ def get_category_id(db: Session, category: str, user_id: int):
 
 def get_category_name_from_id(db: Session, category_id: int, user_id: int):
     return db.query(Category).filter(Category.id == category_id, Category.user_id == user_id).first()
+
+
+def get_category(db: Session, category_id: int):
+    return db.query(Category).filter(Category.id == category_id).first()
+
+
+def get_user_categories(db: Session, user_id: int):
+    return db.query(Category).filter(Category.user_id == user_id).all()
