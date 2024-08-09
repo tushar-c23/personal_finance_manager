@@ -49,3 +49,13 @@ def update_transaction(
 ):
     current_user = user_controller.get_current_user(token, db)
     return transaction_controller.update_transaction(transaction_id, transaction, current_user, db)
+
+
+@router.delete("/transaction/{transaction_id}", response_model=Transaction)
+def delete_transaction(
+    transaction_id: int,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    return transaction_controller.delete_transaction(transaction_id, current_user, db)

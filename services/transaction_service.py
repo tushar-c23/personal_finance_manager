@@ -27,3 +27,11 @@ def update_transaction(db: Session, transaction_id: int, transaction: Transactio
         db.commit()
         db.refresh(transaction_in_db)
     return transaction_in_db
+
+
+def delete_transaction(db: Session, transaction_id: int):
+    transaction_in_db = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    if transaction_in_db:
+        db.delete(transaction_in_db)
+        db.commit()
+    return transaction_in_db

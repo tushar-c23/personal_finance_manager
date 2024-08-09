@@ -29,3 +29,12 @@ def update_transaction(transaction_id: int, transaction: TransactionUpdate, curr
     if transaction_in_db.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized to modify this transaction")
     return transaction_service.update_transaction(db, transaction_id, transaction)
+
+
+def delete_transaction(transaction_id: int, current_user: dict, db: Session):
+    transaction_in_db = transaction_service.get_transaction(db, transaction_id)
+    if not transaction_in_db:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    if transaction_in_db.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this transaction")
+    return transaction_service.delete_transaction(db, transaction_id)
