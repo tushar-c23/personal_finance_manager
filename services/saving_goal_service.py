@@ -12,3 +12,11 @@ def create_saving_goal(db: Session, saving_goal: SavingGoalCreate, user_id: int)
     db.commit()
     db.refresh(db_saving_goal)
     return db_saving_goal
+
+
+def get_saving_goal(db: Session, saving_goal_id: int):
+    return db.query(SavingGoal).filter(SavingGoal.id == saving_goal_id).first()
+
+
+def get_user_saving_goals(db: Session, user_id: int):
+    return db.query(SavingGoal).filter(SavingGoal.user_id == user_id).all()
