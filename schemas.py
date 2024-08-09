@@ -32,7 +32,7 @@ class TransactionType(str, Enum):
 
 class TransactionBase(BaseModel):
     amount: float
-    category: str
+    category_id: str
     description: str
     transaction_type: TransactionType
 
@@ -48,6 +48,26 @@ class TransactionUpdate(TransactionBase):
 
 
 class Transaction(TransactionBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class CategoryBase(BaseModel):
+    name: str
+
+
+class CategoryCreate(CategoryBase):
+    pass
+
+
+class CategoryUpdate(CategoryBase):
+    pass
+
+
+class Category(CategoryBase):
     id: int
     user_id: int
 
