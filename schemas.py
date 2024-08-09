@@ -74,3 +74,26 @@ class Category(CategoryBase):
 
     class Config:
         orm_mode = True
+
+
+class SavingGoalBase(BaseModel):
+    name: str
+    target: float
+    category: int
+
+
+class SavingGoalCreate(SavingGoalBase):
+    pass
+
+
+class SavingGoalUpdate(SavingGoalBase):
+    pass
+
+
+class SavingGoal(SavingGoalBase):
+    id: int
+    user_id: int
+    progress: float
+
+    class Config:
+        orm_mode = True
