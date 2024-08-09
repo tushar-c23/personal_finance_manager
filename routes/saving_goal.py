@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from personal_finance_manager.database import get_db
-from personal_finance_manager.schemas import SavingGoalCreate, SavingGoal
+from personal_finance_manager.schemas import SavingGoalCreate, SavingGoal, SavingGoalUpdate
 from personal_finance_manager.schemas import UserInDB
 from personal_finance_manager.controllers import saving_goal_controller, user_controller, category_controller
 from fastapi.security import OAuth2PasswordBearer
@@ -51,6 +51,37 @@ def read_saving_goal(
 ):
     current_user = user_controller.get_current_user(token, db)
     saving_goal_in_db = saving_goal_controller.get_saving_goal(saving_goal_id, current_user, db)
+    category = category_controller.get_category_name_from_id(saving_goal_in_db.category_id, current_user, db)
+    resp_saving_goal = SavingGoal(name=saving_goal_in_db.name, target=saving_goal_in_db.target,
+                                  progress=saving_goal_in_db.progress, category=category, id=saving_goal_in_db.id,
+                                  user_id=saving_goal_in_db.user_id)
+    return resp_saving_goal
+
+
+@router.put("/saving-goals/{saving_goal_id}", response_model=SavingGoal)
+def update_saving_goal(
+        saving_goal_id: int,
+        saving_goal: SavingGoalUpdate,
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    saving_goal_in_db = saving_goal_controller.update_saving_goal(saving_goal_id, saving_goal, current_user, db)
+    category = category_controller.get_category_name_from_id(saving_goal_in_db.category_id, current_user, db)
+    resp_saving_goal = SavingGoal(name=saving_goal_in_db.name, target=saving_goal_in_db.target,
+                                  progress=saving_goal_in_db.progress, category=category, id=saving_goal_in_db.id,
+                                  user_id=saving_goal_in_db.user_id)
+    return resp_saving_goal
+
+
+@router.delete("/saving-goals/{saving_goal_id}", response_model=SavingGoal)
+def delete_saving_goal(
+        saving_goal_id: int,
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    saving_goal_in_db = saving_goal_controller.delete_saving_goal(saving_goal_id, current_user, db)
     category = category_controller.get_category_name_from_id(saving_goal_in_db.category_id, current_user, db)
     resp_saving_goal = SavingGoal(name=saving_goal_in_db.name, target=saving_goal_in_db.target,
                                   progress=saving_goal_in_db.progress, category=category, id=saving_goal_in_db.id,
