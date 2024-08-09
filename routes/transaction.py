@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-from personal_finance_manager.schemas import Transaction, TransactionCreate
+from personal_finance_manager.schemas import Transaction, TransactionCreate, TransactionUpdate
 from personal_finance_manager.database import get_db
 from personal_finance_manager.controllers import user_controller, transaction_controller
 from typing import List
@@ -38,3 +38,14 @@ def read_transaction(
 ):
     current_user = user_controller.get_current_user(token, db)
     return transaction_controller.get_transaction(transaction_id, current_user, db)
+
+
+@router.put("/transaction/{transaction_id}", response_model=TransactionUpdate)
+def update_transaction(
+    transaction_id: int,
+    transaction: TransactionUpdate,
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    return transaction_controller.update_transaction(transaction_id, transaction, current_user, db)

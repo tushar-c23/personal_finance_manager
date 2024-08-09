@@ -1,4 +1,4 @@
-from personal_finance_manager.schemas import TransactionCreate
+from personal_finance_manager.schemas import TransactionCreate, TransactionUpdate
 from sqlalchemy.orm import Session
 from personal_finance_manager.services import transaction_service
 from personal_finance_manager.schemas import UserInDB
@@ -20,3 +20,12 @@ def get_transaction(transaction_id: int, current_user: UserInDB, db: Session):
 
 def get_user_transactions(current_user: UserInDB, db: Session):
     return transaction_service.get_user_transactions(db, current_user.id)
+
+
+def update_transaction(transaction_id: int, transaction: TransactionUpdate, current_user: UserInDB, db: Session):
+    transaction_in_db = transaction_service.get_transaction(db, transaction_id)
+    if not transaction_in_db:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    if transaction_in_db.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to modify this transaction")
+    return transaction_service.update_transaction(db, transaction_id, transaction)
