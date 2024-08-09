@@ -4,6 +4,16 @@ from sqlalchemy.orm import relationship
 import enum
 
 
+class Category(Base):
+    __tablename__ = "categories"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    user = relationship("User", back_populates="categories")
+    transactions = relationship("Transaction", back_populates="category")
+
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -13,6 +23,7 @@ class User(Base):
     hashed_password = Column(String)
 
     transactions = relationship("Transaction", back_populates="user")
+    categories = relationship("Category", back_populates="user")
 
 
 class TransactionType(str, enum.Enum):
@@ -24,9 +35,11 @@ class Transaction(Base):
     __tablename__ = "transactions"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+    category_id = Column(Integer, ForeignKey("categories.id"))
     amount = Column(Float)
-    category = Column(String)
+    # category = Column(String)
     description = Column(String)
     transaction_type = Column(Enum(TransactionType))
 
     user = relationship("User", back_populates="transactions")
+    category = relationship("Category", back_populates="transactions")
