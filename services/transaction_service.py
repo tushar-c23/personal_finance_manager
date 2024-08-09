@@ -9,3 +9,11 @@ def create_transaction(db: Session, transaction: TransactionCreate, user_id: int
     db.commit()
     db.refresh(db_transaction)
     return db_transaction
+
+
+def get_transaction(db: Session, transaction_id: int):
+    return db.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+
+def get_user_transactions(db: Session, user_id: int):
+    return db.query(Transaction).filter(Transaction.user_id == user_id).all()
