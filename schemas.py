@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from enum import Enum
 
 
 class UserCreate(BaseModel):
@@ -17,3 +18,31 @@ class UserInDB(BaseModel):
     username: str
     email: EmailStr
     name: str
+
+
+class TransactionType(str, Enum):
+    debit = "debit"
+    credit = "credit"
+
+
+class TransactionBase(BaseModel):
+    amount: float
+    category: str
+    description: str
+    transaction_type: TransactionType
+
+
+class TransactionCreate(TransactionBase):
+    pass
+
+
+class TransactionUpdate(TransactionBase):
+    pass
+
+
+class Transaction(TransactionBase):
+    id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
