@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, Date
 from .database import Base
 from sqlalchemy.orm import relationship
 import enum
+from datetime import date
 
 
 class Category(Base):
@@ -42,7 +43,7 @@ class Transaction(Base):
     # category = Column(String)
     description = Column(String)
     transaction_type = Column(Enum(TransactionType))
-    date = Column(String)
+    date = Column(Date, default=date.today)
 
     user = relationship("User", back_populates="transactions")
     category = relationship("Category", back_populates="transactions")

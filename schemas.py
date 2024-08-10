@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from enum import Enum
+from datetime import date
 
 
 class UserCreate(BaseModel):
@@ -35,7 +36,7 @@ class TransactionBase(BaseModel):
     category: str
     description: str
     transaction_type: TransactionType
-    date: str
+    date: date
 
 
 class TransactionCreate(TransactionBase):
