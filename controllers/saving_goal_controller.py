@@ -9,6 +9,8 @@ def create_saving_goal(saving_goal: SavingGoalCreate, current_user: UserInDB, db
     category_id = category_service.get_category_id(db, saving_goal.category, current_user.id).id
     if not category_service.category_exists(db, category_id, current_user.id):
         raise HTTPException(status_code=400, detail="Invalid category for this user")
+    if saving_goal_service.saving_goal_exists_for_user(db, saving_goal.name, current_user.id):
+        raise HTTPException(status_code=400, detail="Saving goal with this name already exists")
     return saving_goal_service.create_saving_goal(db, saving_goal, current_user.id)
 
 

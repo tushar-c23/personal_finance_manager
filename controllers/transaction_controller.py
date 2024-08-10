@@ -8,7 +8,11 @@ from personal_finance_manager.schemas import TransactionType
 
 def create_transaction(transaction: TransactionCreate, current_user: UserInDB, db: Session):
     #Check category here
-    category_id = category_service.get_category_id(db, transaction.category, current_user.id).id
+    print(transaction.category)
+    category_db = category_service.get_category_id(db, transaction.category, current_user.id)
+    if not category_db:
+        raise HTTPException(status_code=400, detail="Category not found")
+    category_id = category_db.id
     if not category_service.category_exists(db, category_id, current_user.id):
         raise HTTPException(status_code=400, detail="Invalid category for this user")
 
@@ -31,7 +35,8 @@ def get_transaction(transaction_id: int, current_user: UserInDB, db: Session):
 
 
 def get_user_transactions(current_user: UserInDB, db: Session):
-    return transaction_service.get_user_transactions(db, current_user.id)
+    transactions = transaction_service.get_user_transactions(db, current_user.id)
+    return transactions
 
 
 def update_transaction(transaction_id: int, transaction: TransactionUpdate, current_user: UserInDB, db: Session):

@@ -1,10 +1,12 @@
 from personal_finance_manager.schemas import CategoryCreate, UserInDB, CategoryUpdate
 from sqlalchemy.orm import Session
-from personal_finance_manager.services import category_service
+from personal_finance_manager.services import category_service, transaction_service
 from fastapi import HTTPException
 
 
 def create_category(category: CategoryCreate, current_user: UserInDB, db: Session):
+    if category_service.category_name_exists_for_user(db, category.name, current_user.id):
+        raise HTTPException(status_code=400, detail="Category with this name already exists")
     return category_service.create_category(db, category, current_user.id)
 
 
@@ -35,6 +37,8 @@ def update_category(category_id: int, category: CategoryUpdate, current_user: Us
 
 
 def delete_category(category_id: int, current_user: UserInDB, db: Session):
+    if transaction_service.get_transactions_by_category(db, current_user.id, category_id) is not None:
+        raise HTTPException(status_code=400, detail="Cannot delete category with transactions")
     db_category = category_service.get_category(db, category_id)
     if not db_category:
         raise HTTPException(status_code=404, detail="Category not found")

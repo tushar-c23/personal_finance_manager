@@ -48,3 +48,7 @@ def delete_category(db: Session, category_id: int):
 
 def category_exists(db: Session, category_id: int, user_id: int):
     return db.query(Category).filter(Category.id == category_id, Category.user_id == user_id).first() is not None
+
+
+def category_name_exists_for_user(db: Session, category: str, user_id: int):
+    return db.query(Category).filter(Category.name == category, Category.user_id == user_id).first() is not None

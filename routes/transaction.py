@@ -34,7 +34,17 @@ def read_transactions(
     db: Session = Depends(get_db)
 ):
     current_user = user_controller.get_current_user(token, db)
-    return transaction_controller.get_user_transactions(current_user, db)
+    transaction_list = transaction_controller.get_user_transactions(current_user, db)
+    resp_transactions = []
+    for transaction in transaction_list:
+        category = category_controller.get_category_name_from_id(transaction.category_id, current_user, db)
+        resp_transaction = Transaction(amount=transaction.amount, date=transaction.date,
+                                       description=transaction.description,
+                                       transaction_type=transaction.transaction_type,
+                                       category=category, id=transaction.id,
+                                       user_id=transaction.user_id)
+        resp_transactions.append(resp_transaction)
+    return resp_transactions
 
 
 @router.get("/{transaction_id}", response_model=Transaction)
@@ -44,7 +54,14 @@ def read_transaction(
     db: Session = Depends(get_db)
 ):
     current_user = user_controller.get_current_user(token, db)
-    return transaction_controller.get_transaction(transaction_id, current_user, db)
+    transaction_in_db = transaction_controller.get_transaction(transaction_id, current_user, db)
+    category = category_controller.get_category_name_from_id(transaction_in_db.category_id, current_user, db)
+    resp_transaction = Transaction(amount=transaction_in_db.amount, date=transaction_in_db.date,
+                                      description=transaction_in_db.description,
+                                      transaction_type=transaction_in_db.transaction_type,
+                                      category=category, id=transaction_in_db.id,
+                                      user_id=transaction_in_db.user_id)
+    return resp_transaction
 
 
 @router.put("/{transaction_id}", response_model=Transaction)
@@ -72,4 +89,11 @@ def delete_transaction(
     db: Session = Depends(get_db)
 ):
     current_user = user_controller.get_current_user(token, db)
-    return transaction_controller.delete_transaction(transaction_id, current_user, db)
+    deleted_transaction = transaction_controller.delete_transaction(transaction_id, current_user, db)
+    category = category_controller.get_category_name_from_id(deleted_transaction.category_id, current_user, db)
+    resp_transaction = Transaction(amount=deleted_transaction.amount, date=deleted_transaction.date,
+                                   description=deleted_transaction.description,
+                                   transaction_type=deleted_transaction.transaction_type,
+                                   category=category, id=deleted_transaction.id,
+                                   user_id=deleted_transaction.user_id)
+    return resp_transaction

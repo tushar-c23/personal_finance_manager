@@ -58,3 +58,8 @@ def update_saving_goal_progress(db: Session, user_id: int, category_id: int, amo
             goal.progress = goal.target
 
     db.commit()
+
+
+def saving_goal_exists_for_user(db: Session, saving_goal_name: str, user_id: int):
+    return db.query(SavingGoal).filter(SavingGoal.name == saving_goal_name,
+                                       SavingGoal.user_id == user_id).first() is not None

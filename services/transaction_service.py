@@ -21,7 +21,8 @@ def get_transaction(db: Session, transaction_id: int):
 
 
 def get_user_transactions(db: Session, user_id: int):
-    return db.query(Transaction).filter(Transaction.user_id == user_id).all()
+    transactions = db.query(Transaction).filter(Transaction.user_id == user_id).all()
+    return transactions
 
 
 def update_transaction(db: Session, transaction_id: int, transaction: TransactionUpdate, user_id: int):
@@ -44,3 +45,7 @@ def delete_transaction(db: Session, transaction_id: int):
         db.delete(transaction_in_db)
         db.commit()
     return transaction_in_db
+
+
+def get_transactions_by_category(db: Session, user_id: int, category_id: int):
+    return db.query(Transaction).filter(Transaction.user_id == user_id, Transaction.category_id == category_id).all()
