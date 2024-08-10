@@ -80,3 +80,6 @@ fastapi dev main.py
 
 ### API Documentation
 Navigate to `http://127.0.0.1:8000/docs` to view the interactive API documentation.
+
+### Postman Collection
+You can download the postman collection and environment from [here](https://drive.google.com/drive/folders/1ZT8ZDlgmEK-yNRpJVz9_ftFpb_hjc4va?usp=sharing)
