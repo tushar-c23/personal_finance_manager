@@ -6,11 +6,11 @@ from personal_finance_manager.database import get_db
 from personal_finance_manager.schemas import UserInDB
 from personal_finance_manager.controllers import report_controller, user_controller
 
-router = APIRouter()
+router = APIRouter(prefix="/reports")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-@router.get("/reports/monthly/{year}/{month}")
+@router.get("/monthly/{year}/{month}")
 def get_monthly_report(
         year: int,
         month: int,
@@ -21,7 +21,7 @@ def get_monthly_report(
     return report_controller.get_monthly_report(year, month, current_user, db)
 
 
-@router.get("/reports/yearly/{year}")
+@router.get("/yearly/{year}")
 def get_yearly_report(
         year: int,
         token: str = Depends(oauth2_scheme),
@@ -30,7 +30,7 @@ def get_yearly_report(
     current_user = user_controller.get_current_user(token, db)
     return report_controller.get_yearly_report(year, current_user, db)
 
-@router.get("/reports/category/monthly/{year}/{month}")
+@router.get("/category/monthly/{year}/{month}")
 def get_monthly_category_report(
         year: int,
         month: int,
@@ -41,7 +41,7 @@ def get_monthly_category_report(
     return report_controller.get_monthly_category_report(year, month, current_user, db)
 
 
-@router.get("/reports/category/yearly/{year}")
+@router.get("/category/yearly/{year}")
 def get_yearly_category_report(
         year: int,
         token: str = Depends(oauth2_scheme),

@@ -7,11 +7,11 @@ from personal_finance_manager.controllers import saving_goal_controller, user_co
 from fastapi.security import OAuth2PasswordBearer
 from typing import List
 
-router = APIRouter()
+router = APIRouter(prefix="/saving-goals")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-@router.post("/saving-goal/", response_model=SavingGoal)
+@router.post("/", response_model=SavingGoal)
 def create_saving_goal(
         saving_goal: SavingGoalCreate,
         token: str = Depends(oauth2_scheme),
@@ -26,7 +26,7 @@ def create_saving_goal(
     return resp_saving_goal
 
 
-@router.get("/saving-goals/", response_model=List[SavingGoal])
+@router.get("/", response_model=List[SavingGoal])
 def read_saving_goals(
         token: str = Depends(oauth2_scheme),
         db: Session = Depends(get_db)
@@ -43,7 +43,7 @@ def read_saving_goals(
     return resp_saving_goal_arr
 
 
-@router.get("/saving-goals/{saving_goal_id}", response_model=SavingGoal)
+@router.get("/{saving_goal_id}", response_model=SavingGoal)
 def read_saving_goal(
         saving_goal_id: int,
         token: str = Depends(oauth2_scheme),
@@ -58,7 +58,7 @@ def read_saving_goal(
     return resp_saving_goal
 
 
-@router.put("/saving-goals/{saving_goal_id}", response_model=SavingGoal)
+@router.put("/{saving_goal_id}", response_model=SavingGoal)
 def update_saving_goal(
         saving_goal_id: int,
         saving_goal: SavingGoalUpdate,
@@ -74,7 +74,7 @@ def update_saving_goal(
     return resp_saving_goal
 
 
-@router.delete("/saving-goals/{saving_goal_id}", response_model=SavingGoal)
+@router.delete("/{saving_goal_id}", response_model=SavingGoal)
 def delete_saving_goal(
         saving_goal_id: int,
         token: str = Depends(oauth2_scheme),

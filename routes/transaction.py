@@ -7,11 +7,11 @@ from personal_finance_manager.controllers import user_controller, transaction_co
 from typing import List
 
 
-router = APIRouter()
+router = APIRouter(prefix="/transactions")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-@router.post("/transaction/", response_model=Transaction)
+@router.post("/", response_model=Transaction)
 def create_transaction(
         transaction: TransactionCreate,
         token: str = Depends(oauth2_scheme),
@@ -28,7 +28,7 @@ def create_transaction(
     return resp_transaction
 
 
-@router.get("/transactions/", response_model=List[Transaction])
+@router.get("/", response_model=List[Transaction])
 def read_transactions(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
@@ -37,7 +37,7 @@ def read_transactions(
     return transaction_controller.get_user_transactions(current_user, db)
 
 
-@router.get("/transaction/{transaction_id}", response_model=Transaction)
+@router.get("/{transaction_id}", response_model=Transaction)
 def read_transaction(
     transaction_id: int,
     token: str = Depends(oauth2_scheme),
@@ -47,7 +47,7 @@ def read_transaction(
     return transaction_controller.get_transaction(transaction_id, current_user, db)
 
 
-@router.put("/transaction/{transaction_id}", response_model=Transaction)
+@router.put("/{transaction_id}", response_model=Transaction)
 def update_transaction(
     transaction_id: int,
     transaction: TransactionUpdate,
@@ -65,7 +65,7 @@ def update_transaction(
     return resp_transaction
 
 
-@router.delete("/transaction/{transaction_id}", response_model=Transaction)
+@router.delete("/{transaction_id}", response_model=Transaction)
 def delete_transaction(
     transaction_id: int,
     token: str = Depends(oauth2_scheme),
