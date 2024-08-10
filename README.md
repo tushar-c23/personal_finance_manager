@@ -83,3 +83,16 @@ Navigate to `http://127.0.0.1:8000/docs` to view the interactive API documentati
 
 ### Postman Collection
 You can download the postman collection and environment from [here](https://drive.google.com/drive/folders/1ZT8ZDlgmEK-yNRpJVz9_ftFpb_hjc4va?usp=sharing)
+
+**Instructions:**
+1. Import the json collections and the environment in postman to get readymade API requests with tests
+2. Signup as a user (optional)
+3. Login as a user (you can use pre filled user in the db)<br>
+	These are the credentials:<br>
+	username: `tushar` <br>
+	password: `test`
+4. After login change the `access_token` variable in the "**Syfe**" environment to the "**access_token**" value received in the response of login api call.
+5. Use all the APIs as required
+
+## Notes
+- The pie charts returned in the reports are in Base64 encoded format. You can decode them using any [online tool](https://base64.guru/converter/decode/image) to view the image.
