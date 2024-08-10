@@ -29,3 +29,23 @@ def get_yearly_report(
 ):
     current_user = user_controller.get_current_user(token, db)
     return report_controller.get_yearly_report(year, current_user, db)
+
+@router.get("/reports/category/monthly/{year}/{month}")
+def get_monthly_category_report(
+        year: int,
+        month: int,
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    return report_controller.get_monthly_category_report(year, month, current_user, db)
+
+
+@router.get("/reports/category/yearly/{year}")
+def get_yearly_category_report(
+        year: int,
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    current_user = user_controller.get_current_user(token, db)
+    return report_controller.get_yearly_category_report(year, current_user, db)
